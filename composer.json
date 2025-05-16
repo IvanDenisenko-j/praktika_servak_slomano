@@ -1,0 +1,16 @@
+{
+    "name": "gr426_deial/backend",
+    "description": "this is my work, 3 variant",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}
