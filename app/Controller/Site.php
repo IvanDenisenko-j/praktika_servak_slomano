@@ -2,14 +2,15 @@
 
 namespace Controller;
 
+use Model\Post;
 use Src\View;
 
 class Site
 {
     public function index(): string
     {
-        $view = new View();
-        return $view->render('site.hello', ['message' => 'index working']);
+        $posts = Post::all();
+        return (new View())->render('site.post', ['posts' => $posts]);
     }
 
     public function hello(): string
