@@ -20,7 +20,7 @@ class Application
         //Привязываем класс со всеми настройками приложения
         $this->settings = $settings;
         //Привязываем класс маршрутизации с установкой префикса
-        $this->route = new Route($this->settings->getRootPath());
+        $this->route = Route::single()->setPrefix($this->settings->getRootPath());
         //Создаем класс менеджера для базы данных
         $this->dbManager = new Capsule();
         //Создаем класс для аутентификации на основе настроек приложения
@@ -58,4 +58,5 @@ class Application
         //Запуск маршрутизации
         $this->route->start();
     }
+
 }
