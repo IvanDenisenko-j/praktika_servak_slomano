@@ -1,0 +1,21 @@
+{
+    "name": "gr426_deial/backend",
+    "description": "this is my work, 3 variant",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0",
+        "illuminate/database": "10.x-dev",
+        "illuminate/events": "10.x-dev",
+        "nikic/fast-route": "^2.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "core\\": "src/Core/",
+            "Src\\": "core/Src/",
+            "Controller\\": "controller/",
+            "": "app/"
+        }
+    }
+}
