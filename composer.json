@@ -1,0 +1,25 @@
+{
+    "name": "stefan0802/php_practic-1",
+    "description": "practic work",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stefan0802",
+            "email": "stpa.leonov@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0",
+        "illuminate/database": "10.x-dev",
+        "illuminate/events": "10.x-dev",
+        "nikic/fast-route": "^2.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}
