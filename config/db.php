@@ -2,9 +2,9 @@
 return [
     'driver' => 'mysql',
     'host' => 'localhost',
-    'database' => 'tbrbtiuk_m6',
-    'username' => 'root', // tbrbtiuk
-    'password' => '', //iv1TdX
+    'database' => 'igfgdaby_m1',
+    'username' => 'igfgdaby', // root
+    'password' => '7ZzjPJ', //iv1TdX
     'charset' => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix' => '',

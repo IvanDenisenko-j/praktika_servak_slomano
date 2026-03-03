@@ -19,3 +19,4 @@ Route::add(['GET', 'POST'], '/', [Controller\AuthController::class, 'login'])->m
 Route::add('GET', '/logout', [Controller\AuthController::class, 'logout']);
 
 
+//http://mnbiaiy-m1.wsr.ru/praktika_servak_slomano/
