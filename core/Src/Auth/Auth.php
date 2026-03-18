@@ -2,6 +2,7 @@
 
 namespace Src\Auth;
 
+use Model\Token;
 use Src\Session;
 
 class Auth
@@ -72,7 +73,7 @@ class Auth
         $expiresAt = date('Y-m-d H:i:s', strtotime('+1 day'));
 
         // Сохраняем в БД
-        Model\Token::create([
+        Token::create([
             'user_id' => $userId,
             'token' => $token,
             'expires_at' => $expiresAt
@@ -83,7 +84,7 @@ class Auth
 
     public function checkByToken(string $token): ?\App\Model\User
     {
-        $tokenRecord = Model\Token::where('token', $token)
+        $tokenRecord = Token::where('token', $token)
             ->where('expires_at', '>', now())
             ->first();
 

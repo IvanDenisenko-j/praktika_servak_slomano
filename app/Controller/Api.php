@@ -8,14 +8,9 @@ use Src\View;
 use Src\Request;
 use Src\Auth\Auth;
 use Src\Validator\Validator;
+
 class Api
 {
-    public function index(): void
-    {
-        $posts = Post::all()->toArray();
-
-        (new View())->toJSON($posts);
-    }
 
     public function echo(Request $request): void
     {
@@ -25,59 +20,85 @@ class Api
     public function api_register(Request $request): string
     {
         $data = $request->all();
-
-        $validator = new Validator($data, [
-            'login' => ['required', 'unique:users,login'],
-            'password' => ['required', 'min:6']
-        ]);
-
-        if ($validator->fails()) {
-            return json_encode(['errors' => $validator->errors()]);
+        $us = User::where('login', $data['login'])->first();
+        if($us){
+            return (new View())->toJSON([
+                'error' => 'пользователь с таким логином уже существует',
+            ], 422);
         }
 
         $user = User::create([
             'login' => $data['login'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+            'password' => md5((string)$data['password']),
             'name' => $data['name'] ?? '',
-            'lastName' => $data['lastName'] ?? ''
         ]);
 
         if ($user) {
-            $token = Auth::generateToken($user->id);
-            return json_encode([
+            $auth = new Auth();
+            $token = $auth->generateToken($user->id);
+            return (new View())->toJSON([
                 'message' => 'Пользователь зарегистрирован',
-                'token' => $token
+                'token' => $token,
             ]);
         }
 
-        return json_encode(['error' => 'Не удалось создать пользователя']);
+        return (new View())->toJSON(['error' => 'Не удалось создать пользователя']);
     }
 
     public function api_login(Request $request): string
     {
         $credentials = $request->all();
 
-        if (!$user = Auth::attempt($credentials)) {
-            return json_encode(['error' => 'Неправильный логин или пароль']);
+        if (empty($credentials['login']) || empty($credentials['password'])) {
+            return (new View())->toJSON([
+                'error' => 'Логин и пароль обязательны для заполнения'
+            ]);
         }
 
-        $token = Auth::generateToken($user->id);
+        try {
+            $user = User::where('login', $credentials['login'])->first();
 
-        return json_encode([
-            'message' => 'Авторизация успешна',
-            'token' => $token,
-            'user' => $user->only(['id', 'login', 'name', 'lastName'])
-        ]);
+            if (!$user){
+                return (new View())->toJSON([
+                    'error' => 'пользователь не найден'
+                ]);
+            }
+
+            if (md5((string)$credentials['password']) !== $user->passwor){
+                return (new View())->toJSON([
+                    'error' => 'неверный пароль',
+                    'password' => md5((string)$credentials['password']),
+                ]);
+            };
+
+            $auth = new Auth();
+            $token = $auth->generateToken($user->id);
+
+            return (new View())->toJSON([
+                'message' => 'авторизация прошла успешно',
+                'token' => $token,
+                'user' => [
+                    'login' => $user->login,
+                    'name' => $user->name
+                ]
+            ], 200);
+
+        }catch (\Exception $e){
+            return (new View())->toJSON([
+                'error' => 'ошибка валидации, попробуйте позже'
+            ]);
+        }
+
     }
 
 
     public function secure_data(Request $request): string
     {
-        $user = $request->get('user'); // Получаем из запроса текущего пользователя
+        $user = $request->get('user');
 
-        return json_encode([
+        return (new View())->toJSON([
             'message' => 'Вы успешно вошли через токен!',
-            'user' => $user->only(['id', 'login', 'name', 'lastName'])
+            'user' => $user->only(['id', 'login', 'name'])
         ]);
     }
 }
